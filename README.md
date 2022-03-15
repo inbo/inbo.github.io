@@ -22,12 +22,9 @@ We solve this by having this `inbo/inbo.github.io` repository, which creates an 
     ```html
     <html>
       <head>
-        <meta http-equiv="refresh" content="0;URL=https://inbo.github.io/repo-new/" />  
-        <script language="javascript">
-          window.location.href = "https://inbo.github.io/repo-new"
-        </script>
+        <meta http-equiv="refresh" content="0;URL=https://inbo.github.io/camtraptor/">
       </head>
     </html>
     ```
 
-Once done, `https://inbo.github.io/repo/` will still exists as a working URL, even though the `inbo/repo` repository does not. And it will redirect to the new URL. The Javascript will redirect any subpages to the new homepage.
+Once done, `https://inbo.github.io/repo/` will still exists as a working URL, even though the `inbo/repo` repository does not. And it will redirect to the new URL.
