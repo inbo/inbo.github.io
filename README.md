@@ -22,7 +22,7 @@ We solve this by having this `inbo/inbo.github.io` repository, which creates an 
     ```html
     <html>
       <head>
-        <meta http-equiv="refresh" content="0;URL=https://inbo.github.io/camtraptor/">
+        <meta http-equiv="refresh" content="0;URL=https://inbo.github.io/new-repo/">
       </head>
     </html>
     ```
