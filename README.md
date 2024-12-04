@@ -1,30 +1,38 @@
 # inbo.github.io
 
-An organization-level inbo.github.io website to allow URL redirects when our repositories have been renamed or moved.
+Organization site to redirect old GitHub Pages URLs.
 
-## Rationale
+## Problem
 
-Adapted from https://gist.github.com/domenic/1f286d415559b56d725bee51a62c24a7: 
+[Renaming](https://docs.github.com/en/repositories/creating-and-managing-repositories/renaming-a-repository) or [transferring](https://docs.github.com/en/repositories/creating-and-managing-repositories/transferring-a-repository) a repository has an impact on URLs:
 
-### The problem
+- ✅ New repo URL `https://github.com/<new_org>/<new_repo>` is created.
+- ✅ Old repo URL `https://github.com/<org>/<repo>` will automatically redirect to the new repo URL.
+- ✅ New GitHub Pages URL `https://<new_org>.github.io/<new_repo>` is created.
+- ❌ Old GitHub Pages URL `https://<org>.github.io/<repo>` returns a 404 error.
 
-We have a repository, e.g. `inbo/repo`. We would like to rename it to `inbo/repo-new` or transfer it to the organization `trias-project`, so it will become `trias-project/repo`.
+Any reference to the old Github Pages URL `https://<org>.github.io/<repo>` is now broken.
 
-However, we make heavy use of the [GitHub Pages](https://pages.github.com/) feature for that repository, so that people are often accessing `https://inbo.github.io/repo/`. GitHub will [helpfully redirect](https://github.com/blog/1508-repository-redirects-are-here) all of our repository stuff hosted on github.com after the move, but will not redirect the GitHub Pages hosted on github.io.
+## Solution
 
-### The solution
+This `https://github.com/<org>/<org>.github.io` repository has an associated [organization site](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site#creating-a-repository-for-your-site), served from `https://<org>.github.io`. By creating subdirectories, we can redirect old GitHub Pages URLs:
 
-We solve this by having this `inbo/inbo.github.io` repository, which creates an organization-level `https://inbo.github.io` GitHub Pages website. We now can:
+1. Rename or transfer your `<repo>`. This will break the old GitHub Pages URL `https://<org>.github.io/<repo>`.
+2. Create a directory in this repository, named `<repo>` (see the repo for examples).
+3. Add an `index.html` to that directory, with the following content (replace the `URL` with the new GitHub Pages URL):
 
-1. Rename or transfer the repository, thus breaking all the links
-2. Add a file `repo/index.html` to this repository, which uses `<meta http-equiv="refresh">` to redirect to the new URL. The `index.html` file should look like this (also documented in the [rOpenSci devguide](https://devguide.ropensci.org/redirect.html)):
+```html
+<html>
+  <head>
+    <meta http-equiv="refresh" content="0;URL=https://<new_org>.github.io/<new_repo>/">
+  </head>
+</html>
+```
 
-    ```html
-    <html>
-      <head>
-        <meta http-equiv="refresh" content="0;URL=https://inbo.github.io/new-repo/">
-      </head>
-    </html>
-    ```
+4. Commit.
+5. A page will now be served from the old GitHub Pages URL `https://<org>.github.io/<repo>/`. It will redirect without delay to the new GitHub Pages URL.
 
-Once done, `https://inbo.github.io/repo/` will still exists as a working URL, even though the `inbo/repo` repository does not. And it will redirect to the new URL.
+Note that only the homepage `https://<org>.github.io/<repo>/` will be redirected. This is typically sufficient, since subpages are seldom referenced elsewhere. To redirect subpages, either:
+
+- Add a `404.html` with the same content as `index.html` to redirect all subpages to the new homepage.
+- Add a `path/to/subpage/index.html` file (with specific `URL`) to redirect a specific subpage.
